@@ -1,0 +1,41 @@
+src/datadog_client.gleam
+  s_06b1a65d3e5f99::t_c5632d54b42e4f 3,13-17,44,46-47,49-59,68,87-89,91-110,112-115
+  s_06b1a65d3e5f99::t_81a54d00d2e4e3 8-10,61,78
+  s_06b1a65d3e5f99::t_aa1969b29fd14c 48,62,79,90,111
+src/datadog_client/common.gleam
+  s_06b1a65d3e5f99::t_2df71f7d472e96 6-8,10
+  s_06b1a65d3e5f99::t_0540a2d0ce7a3c 2
+src/datadog_client/common_ffi.mjs
+  s_06b1a65d3e5f99::t_ecf8ae57fa6ab4 1-3
+gleam.toml
+  s_06b1a65d3e5f99::t_c6f275e1cba1db 16-17
+test/datadog_client/metric_test.gleam
+  s_06b1a65d3e5f99::t_b49462454ae169 100-101,105-106,114-115,118-119
+manifest.toml
+  s_06b1a65d3e5f99::t_c6f275e1cba1db 6,9,16,19
+README.md
+  h_55b93de7ce5e50 6
+.github/workflows/test.yml
+  s_06b1a65d3e5f99::t_e6a5e2fb20a8d1 55-99
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "0df58b766c5f874e37b83761223fe58806a7966e",
+  "prompts": {},
+  "humans": {
+    "h_55b93de7ce5e50": {
+      "author": "robertDurst <me@robdurst.com>"
+    }
+  },
+  "sessions": {
+    "s_06b1a65d3e5f99": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "63b911bf-cfcf-4243-9b64-ed2b9943569e",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "robertDurst <me@robdurst.com>"
+    }
+  }
+}
