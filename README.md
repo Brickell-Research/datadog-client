@@ -3,7 +3,7 @@
 [![Package Version](https://img.shields.io/hexpm/v/datadog_client)](https://hex.pm/packages/datadog_client)
 [![Tests](https://github.com/Brickell-Research/datadog-client/actions/workflows/test.yml/badge.svg)](https://github.com/Brickell-Research/datadog-client/actions/workflows/test.yml)
 
-A minimal HTTP client for the [Datadog v1 metrics API](https://docs.datadoghq.com/api/latest/metrics/#submit-metrics).
+A minimal HTTP client for Datadog. Intentionally dual target-able (JS & Erlang) ✅
 
 ```sh
 gleam add datadog_client

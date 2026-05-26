@@ -97,13 +97,13 @@ pub fn with_points_test() {
   let body =
     metric.gauge("x", 1.0)
     |> metric.with_points(with: [
-      metric.Point(timestamp: ts, value: 9.0),
-      metric.Point(timestamp: ts + 1, value: 8.0),
+      metric.Point(timestamp: ts, value: 9.5),
+      metric.Point(timestamp: ts + 1, value: 8.25),
     ])
     |> metric.to_json
     |> json.to_string
-  test_helpers.assert_contains(body, "[1700000000,9.0]")
-  test_helpers.assert_contains(body, "[1700000001,8.0]")
+  test_helpers.assert_contains(body, "[1700000000,9.5]")
+  test_helpers.assert_contains(body, "[1700000001,8.25]")
 }
 
 // ==== add_point ====
@@ -111,12 +111,12 @@ pub fn with_points_test() {
 pub fn add_point_test() {
   let body =
     metric.gauge("x", 1.0)
-    |> metric.with_points(with: [metric.Point(timestamp: ts, value: 1.0)])
-    |> metric.add_point(at: ts + 5, of: 2.0)
+    |> metric.with_points(with: [metric.Point(timestamp: ts, value: 1.5)])
+    |> metric.add_point(at: ts + 5, of: 2.25)
     |> metric.to_json
     |> json.to_string
-  test_helpers.assert_contains(body, "[1700000005,2.0]")
-  test_helpers.assert_contains(body, "[1700000000,1.0]")
+  test_helpers.assert_contains(body, "[1700000005,2.25]")
+  test_helpers.assert_contains(body, "[1700000000,1.5]")
 }
 
 // ==== to_json ====
