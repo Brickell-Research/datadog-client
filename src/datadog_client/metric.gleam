@@ -89,10 +89,10 @@ pub fn with_points(metric: Metric, with points: List(Point)) -> Metric {
 
 /// Append a single point at the given timestamp.
 pub fn add_point(metric: Metric, at timestamp: Int, of value: Float) -> Metric {
-  Metric(
-    ..metric,
-    points: [Point(timestamp: timestamp, value: value), ..metric.points],
-  )
+  Metric(..metric, points: [
+    Point(timestamp: timestamp, value: value),
+    ..metric.points
+  ])
 }
 
 // --- JSON encoding ----------------------------------------------------------
