@@ -1,0 +1,20 @@
+README.md
+  s_06b1a65d3e5f99::t_f0223b6785c08e 4-6,9,11,14,16-17
+  s_06b1a65d3e5f99::t_930bf873663d2e 19-22,24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "9615965bdd040087ee855a707c12b8e1128dd69c",
+  "prompts": {},
+  "sessions": {
+    "s_06b1a65d3e5f99": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "63b911bf-cfcf-4243-9b64-ed2b9943569e",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "robertDurst <me@robdurst.com>"
+    }
+  }
+}
