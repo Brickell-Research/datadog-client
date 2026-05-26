@@ -1,4 +1,4 @@
-# datadog_client
+# Datadog Client
 
 [![Package Version](https://img.shields.io/hexpm/v/datadog_client)](https://hex.pm/packages/datadog_client)
 [![Tests](https://github.com/Brickell-Research/datadog-client/actions/workflows/test.yml/badge.svg)](https://github.com/Brickell-Research/datadog-client/actions/workflows/test.yml)
