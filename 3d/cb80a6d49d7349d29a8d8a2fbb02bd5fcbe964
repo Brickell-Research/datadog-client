@@ -1,0 +1,24 @@
+.github/workflows/release.yml
+  s_06b1a65d3e5f99::t_83b88645f86f8d 60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "3dcb80a6d49d7349d29a8d8a2fbb02bd5fcbe964",
+  "prompts": {},
+  "humans": {
+    "h_55b93de7ce5e50": {
+      "author": "robertDurst <me@robdurst.com>"
+    }
+  },
+  "sessions": {
+    "s_06b1a65d3e5f99": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "63b911bf-cfcf-4243-9b64-ed2b9943569e",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "robertDurst <me@robdurst.com>"
+    }
+  }
+}
