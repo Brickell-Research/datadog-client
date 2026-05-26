@@ -1,0 +1,39 @@
+src/datadog_client/metric.gleam
+  s_06b1a65d3e5f99::t_799b7617610911 1
+test/datadog_client/metric_test.gleam
+  s_06b1a65d3e5f99::t_4be024315cb400 1
+test/datadog_client_test.gleam
+  s_06b1a65d3e5f99::t_0c702548b18db3 2,37,40-41,45
+  s_06b1a65d3e5f99::t_0a147e8799534e 4,10,12-20,23-32,35-36,38,44
+src/datadog_client/common.gleam
+  h_55b93de7ce5e50 1-12
+test/datadog_client/common_test.gleam
+  s_06b1a65d3e5f99::t_7062abba16b788 1
+test/test_helpers.gleam
+  s_06b1a65d3e5f99::t_74075c8cf5d53a 1-88
+src/datadog_client.gleam
+  s_06b1a65d3e5f99::t_60b64be0296bd4 16,43,69,71,77-78,80-81
+  s_06b1a65d3e5f99::t_21fa0d0af4f52b 32
+  s_06b1a65d3e5f99::t_2991f28e575acc 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.1",
+  "base_commit_sha": "441b9aa2adaf5924287e264e8eafcaf76293c35b",
+  "prompts": {},
+  "humans": {
+    "h_55b93de7ce5e50": {
+      "author": "robertDurst <me@robdurst.com>"
+    }
+  },
+  "sessions": {
+    "s_06b1a65d3e5f99": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "63b911bf-cfcf-4243-9b64-ed2b9943569e",
+        "model": "claude-opus-4-7"
+      },
+      "human_author": "robertDurst <me@robdurst.com>"
+    }
+  }
+}
