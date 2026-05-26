@@ -1,21 +1,9 @@
-//// Minimal Datadog v1 metrics client.
-////
-//// Create a client, build metrics, send them:
-////
-//// ```gleam
-//// let client = datadog_client.new("DD_API_KEY")
-//// datadog_client.gauge("my.metric", 1.23)
-//// |> datadog_client.with_tags(["env:prod"])
-//// |> datadog_client.with_host("web-01")
-//// |> datadog_client.send(client, _)
-//// ```
-
+import datadog_client/metric.{type Metric}
 import gleam/http
 import gleam/http/request
 import gleam/http/response.{type Response}
 import gleam/httpc
 import gleam/json
-import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
 
@@ -25,27 +13,7 @@ pub type Client {
   Client(api_key: String, site: String)
 }
 
-pub type MetricType {
-  Gauge
-  Count
-  Rate
-}
-
-/// A single (timestamp_seconds, value) sample.
-pub type Point =
-  #(Int, Float)
-
-pub opaque type Metric {
-  Metric(
-    name: String,
-    kind: MetricType,
-    points: List(Point),
-    tags: List(String),
-    host: Option(String),
-    interval: Option(Int),
-  )
-}
-
+/// Failure modes returned by `send`.
 pub type SendError {
   /// Transport-level failure (DNS, TCP, TLS, etc.).
   HttpError(String)
@@ -61,73 +29,8 @@ pub fn new(api_key: String) -> Client {
 }
 
 /// Override the Datadog site (e.g. `"datadoghq.eu"`).
-pub fn with_site(client: Client, site: String) -> Client {
+pub fn with_site(client: Client, to site: String) -> Client {
   Client(..client, site: site)
-}
-
-// --- Construction -----------------------------------------------------------
-
-/// Gauge metric at the current time.
-pub fn gauge(name: String, value: Float) -> Metric {
-  metric(name, Gauge, value)
-}
-
-/// Count metric at the current time.
-pub fn count(name: String, value: Float) -> Metric {
-  metric(name, Count, value)
-}
-
-/// Rate metric at the current time. Set the interval with `with_interval`.
-pub fn rate(name: String, value: Float) -> Metric {
-  metric(name, Rate, value)
-}
-
-fn metric(name: String, kind: MetricType, value: Float) -> Metric {
-  Metric(
-    name: name,
-    kind: kind,
-    points: [#(now_seconds(), value)],
-    tags: [],
-    host: None,
-    interval: None,
-  )
-}
-
-// --- Modification -----------------------------------------------------------
-
-/// Replace the metric's tags.
-pub fn with_tags(metric: Metric, tags: List(String)) -> Metric {
-  Metric(..metric, tags: tags)
-}
-
-/// Append a single tag.
-pub fn add_tag(metric: Metric, tag: String) -> Metric {
-  Metric(..metric, tags: [tag, ..metric.tags])
-}
-
-/// Set the reporting host.
-pub fn with_host(metric: Metric, host: String) -> Metric {
-  Metric(..metric, host: Some(host))
-}
-
-/// Set the metric type (gauge/count/rate).
-pub fn with_type(metric: Metric, kind: MetricType) -> Metric {
-  Metric(..metric, kind: kind)
-}
-
-/// Set the flush interval in seconds (required for `Rate`).
-pub fn with_interval(metric: Metric, seconds: Int) -> Metric {
-  Metric(..metric, interval: Some(seconds))
-}
-
-/// Replace all points.
-pub fn with_points(metric: Metric, points: List(Point)) -> Metric {
-  Metric(..metric, points: points)
-}
-
-/// Append a single point.
-pub fn add_point(metric: Metric, timestamp: Int, value: Float) -> Metric {
-  Metric(..metric, points: [#(timestamp, value), ..metric.points])
 }
 
 // --- Sending ----------------------------------------------------------------
@@ -137,7 +40,7 @@ pub fn send(
   client: Client,
   metrics: List(Metric),
 ) -> Result(Response(String), SendError) {
-  let body = json.to_string(encode_series(metrics))
+  let body = encode_to_json(metrics)
 
   let req =
     request.new()
@@ -163,65 +66,17 @@ pub fn send(
 /// Send a single metric. Convenience over `send`.
 pub fn send_one(
   client: Client,
-  metric: Metric,
+  m: Metric,
 ) -> Result(Response(String), SendError) {
-  send(client, [metric])
+  send(client, [m])
 }
 
 // --- JSON encoding ----------------------------------------------------------
 
 /// Serialize a list of metrics to the exact JSON body sent to `/api/v1/series`.
-/// Useful for tests or buffering payloads for later submission.
+/// Exposed for tests and for buffering payloads for later submission.
+@internal
 pub fn encode_to_json(metrics: List(Metric)) -> String {
-  json.to_string(encode_series(metrics))
-}
-
-fn encode_series(metrics: List(Metric)) -> json.Json {
-  json.object([#("series", json.array(metrics, of: encode_metric))])
-}
-
-fn encode_metric(metric: Metric) -> json.Json {
-  let base = [
-    #("metric", json.string(metric.name)),
-    #("type", json.string(type_string(metric.kind))),
-    #("points", json.array(metric.points, of: encode_point)),
-    #("tags", json.array(metric.tags, of: json.string)),
-  ]
-
-  let with_host = case metric.host {
-    Some(h) -> [#("host", json.string(h)), ..base]
-    None -> base
-  }
-
-  case metric.interval {
-    Some(i) -> [#("interval", json.int(i)), ..with_host]
-    None -> with_host
-  }
-  |> json.object
-}
-
-fn encode_point(point: Point) -> json.Json {
-  let #(ts, value) = point
-  json.preprocessed_array([json.int(ts), json.float(value)])
-}
-
-fn type_string(kind: MetricType) -> String {
-  case kind {
-    Gauge -> "gauge"
-    Count -> "count"
-    Rate -> "rate"
-  }
-}
-
-// --- Helpers ----------------------------------------------------------------
-
-@external(erlang, "erlang", "system_time")
-fn erlang_system_time(unit: SystemTimeUnit) -> Int
-
-type SystemTimeUnit {
-  Second
-}
-
-fn now_seconds() -> Int {
-  erlang_system_time(Second)
+  json.object([#("series", json.array(metrics, of: metric.to_json))])
+  |> json.to_string
 }

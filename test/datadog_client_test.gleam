@@ -1,46 +1,46 @@
 import datadog_client
-import gleam/string
+import datadog_client/metric
 import gleeunit
+import test_helpers
 
 pub fn main() -> Nil {
   gleeunit.main()
 }
 
-pub fn gauge_encodes_to_json_test() {
-  let body =
-    datadog_client.gauge("system.load", 0.7)
-    |> datadog_client.with_points([#(1_700_000_000, 0.7)])
-    |> datadog_client.with_tags(["env:prod", "service:api"])
-    |> datadog_client.with_host("web-01")
-    |> fn(m) { [m] }
-    |> datadog_client.encode_to_json
+const ts = 1_700_000_000
 
-  assert string.contains(body, "\"metric\":\"system.load\"")
-  assert string.contains(body, "\"type\":\"gauge\"")
-  assert string.contains(body, "[1700000000,0.7]")
-  assert string.contains(body, "\"host\":\"web-01\"")
-  assert string.contains(body, "env:prod")
+// ==== new ====
+// * ✅ defaults to datadoghq.com
+// * ✅ stores the supplied api key
+pub fn new_test() {
+  let client = datadog_client.new("secret")
+  case client.api_key == "secret" && client.site == "datadoghq.com" {
+    True -> Nil
+    False -> panic as "client defaults mismatch"
+  }
 }
 
-pub fn rate_includes_interval_test() {
-  let body =
-    datadog_client.rate("requests.per_sec", 12.5)
-    |> datadog_client.with_points([#(1_700_000_000, 12.5)])
-    |> datadog_client.with_interval(10)
-    |> fn(m) { [m] }
-    |> datadog_client.encode_to_json
-
-  assert string.contains(body, "\"type\":\"rate\"")
-  assert string.contains(body, "\"interval\":10")
+// ==== with_site ====
+// * ✅ overrides default site
+pub fn with_site_test() {
+  let client =
+    datadog_client.new("secret")
+    |> datadog_client.with_site(to: "datadoghq.eu")
+  case client.site == "datadoghq.eu" {
+    True -> Nil
+    False -> panic as "with_site did not override site"
+  }
 }
 
-pub fn add_tag_prepends_test() {
+// ==== encode_to_json ====
+// * ✅ wraps metrics in a "series" envelope
+// * ✅ embeds each metric's encoded body
+pub fn encode_to_json_test() {
   let body =
-    datadog_client.count("hits", 1.0)
-    |> datadog_client.with_points([#(1_700_000_000, 1.0)])
-    |> datadog_client.add_tag("region:us-east-1")
+    metric.gauge("system.load", 0.7)
+    |> metric.with_points(with: [metric.Point(timestamp: ts, value: 0.7)])
     |> fn(m) { [m] }
     |> datadog_client.encode_to_json
-
-  assert string.contains(body, "region:us-east-1")
+  test_helpers.assert_contains(body, "\"series\":[")
+  test_helpers.assert_contains(body, "\"metric\":\"system.load\"")
 }
